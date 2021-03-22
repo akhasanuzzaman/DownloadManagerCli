@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DownloadManagerCliApp": {
+      "commandName": "Project",
+      "commandLineArgs": " download -d true -v true  -f \"InputSource\\\\downloadsource.yml\""
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
