@@ -11,6 +11,6 @@ validate
 1. validate -f "InputSource\downloadsource.yml" 
 2. validate -v true -f "InputSource\downloadsource.yml" 
 
-InputSource => In the root directory is the yaml file source
-DownloadFiles => In the root directory is the target where the files will be downloaded
+InputSource => In the root directory is the yaml file source.
+DownloadFiles => In the root directory is the target where the files will be downloaded.
  
