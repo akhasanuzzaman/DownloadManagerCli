@@ -29,7 +29,7 @@ namespace DownloadManagerCli.UnitTests
                 .Returns(default(Task<string>));
 
             //Act
-            var _sut = new DownloadSourceFile(mockCallRemoteServer.Object);
+            var _sut = new DownloadSourceFile(mockCallRemoteServer.Object, null); // ILogger should be mocked
             Action action = async () => await _sut.DownloadAsync(new InputSource()
             {
                 Downloads = new Download[] {
@@ -64,7 +64,7 @@ namespace DownloadManagerCli.UnitTests
                 .Returns(default(Task<string>));
 
             //Act
-            var _sut = new DownloadSourceFile(mockCallRemoteServer.Object);
+            var _sut = new DownloadSourceFile(mockCallRemoteServer.Object, null);// ILogger should be mocked
 
             Func<Task> action = async () => await _sut.DownloadAsync(new InputSource()
             {

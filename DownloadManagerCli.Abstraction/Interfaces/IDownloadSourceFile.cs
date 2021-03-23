@@ -7,6 +7,5 @@ namespace DownloadManagerCli.Abstraction.Interfaces
     {
         Task DownloadAsync(InputSource downloadSource);
         void ExecuteDryRun(bool isVerbose, Download[] downloads);
-        //Task DownloadUrlAsync(Uri url);
     }
 }

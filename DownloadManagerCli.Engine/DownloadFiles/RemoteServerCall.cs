@@ -2,7 +2,6 @@
 {
     using DownloadManagerCli.Abstraction.Interfaces;
     using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using System;
     using System.IO;
     using System.Net;
@@ -37,6 +36,7 @@
                 }
 
                 Console.WriteLine();
+
                 if (!File.Exists(downloadToFilePath))
                 {
                     Console.WriteLine($"{Path.GetFileName(uri.AbsoluteUri)} was't downloaded");
@@ -56,6 +56,7 @@
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
+                Console.WriteLine(ex.Message);
             }
 
             return downloadToFilePath;

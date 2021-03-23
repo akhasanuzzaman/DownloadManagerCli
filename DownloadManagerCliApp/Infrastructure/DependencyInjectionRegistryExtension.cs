@@ -24,7 +24,6 @@
             services.AddSingleton<ValidateSource>(); 
 
             services.AddSingleton<ICallRemoteServer, CallRemoteServer>();
-            //services.AddSingleton<IContentWriter, ContentWriter>();
         }
     }
 }

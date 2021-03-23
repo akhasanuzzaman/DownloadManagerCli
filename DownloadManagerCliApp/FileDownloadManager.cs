@@ -19,7 +19,7 @@
 
     internal static class FileDownloadManager
     {
-        public static void StartToDownload(string[] args)
+        public static async Task StartToDownloadAsync(string[] args)
         {
             try
             {
@@ -55,6 +55,8 @@
 
 
                 Log.Logger.Information("Download completed");
+
+                await Task.FromResult(0);
 
             }
             catch (Exception ex)
@@ -102,8 +104,6 @@
             if (inputSource?.Config?.DownloadDirectory == null || inputSource?.Config?.DownloadDirectory == null)
                 throw new Exception("Download directory can't be null");
 
-            //if (Directory.Exists(inputSource?.Config?.DownloadDirectory))
-            //    throw new Exception("Download directory does not exits");
 
             inputSource.Verbose = verbose;
             inputSource.Config.ParallelDownloads = numberOfParallelDownloads > 0 ?

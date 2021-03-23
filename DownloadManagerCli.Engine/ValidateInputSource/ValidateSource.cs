@@ -28,7 +28,6 @@
 
         private static DownloadSourceBase GetDownloadSourceFromFactory(string fileExtension)
         {
-            //DownloadSourceFactory downloadSourceFactory = new ConcreteDownloadSourceFactory();
             DownloadSourceBase downloadSourceBase = DownloadSourceFactory.GetDownloadSource(fileExtension.ToUpper());
             return downloadSourceBase;
         }

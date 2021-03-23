@@ -1,9 +1,12 @@
-﻿namespace DownloadManagerCliApp
+﻿
+using System.Threading.Tasks;
+
+namespace DownloadManagerCliApp
 {
     internal sealed class Program
     {
-        static void Main(string[] args)
-                                => FileDownloadManager
-                                        .StartToDownload(args);
+        static async Task Main(string[] args)
+                                =>await FileDownloadManager
+                                        .StartToDownloadAsync(args);
     }
 }

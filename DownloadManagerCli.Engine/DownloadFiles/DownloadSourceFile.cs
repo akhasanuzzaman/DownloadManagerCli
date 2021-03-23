@@ -2,6 +2,7 @@
 {
     using DownloadManagerCli.Abstraction.Interfaces;
     using DownloadManagerCli.Model.DownloadSource;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -11,9 +12,11 @@
     {
         readonly ICallRemoteServer _remoteServerCall;
         private static int Count;
+        private readonly ILogger<DownloadSourceFile> _logger;
 
-        public DownloadSourceFile(ICallRemoteServer remoteServerCall)
+        public DownloadSourceFile(ICallRemoteServer remoteServerCall, ILogger<DownloadSourceFile> logger)
         {
+            _logger = logger;
             _remoteServerCall = remoteServerCall;
         }
         public async Task DownloadAsync(InputSource downloadSource)
@@ -52,19 +55,29 @@
 
             for (var i = 0; i < inputSource.Downloads.Length; i = i + inputSource.Config.ParallelDownloads)
             {
-                var urlsToBeDownloaded = inputSource.Downloads
-                                                            .Skip(i)
-                                                                .Take(inputSource.Config.ParallelDownloads);
+                try
+                {
 
-                Action<bool, bool, int, string> showMessageOnConsole = DisplayMessage;
+                    var urlsToBeDownloaded = inputSource.Downloads
+                                                                .Skip(i)
+                                                                    .Take(inputSource.Config.ParallelDownloads);
 
-                var tasks = GetDownloadTasks(inputSource, urlsToBeDownloaded, showMessageOnConsole);
+                    Action<bool, bool, int, string> showMessageOnConsole = DisplayMessage;
+
+                    var tasks = GetDownloadTasks(inputSource, urlsToBeDownloaded, showMessageOnConsole);
 
 
-                string[] results = await Task.WhenAll(tasks)
-                            .ConfigureAwait(false);
+                    string[] results = await Task.WhenAll(tasks)
+                                .ConfigureAwait(false);
 
-                taskResults.AddRange(results);
+                    taskResults.AddRange(results);
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.ToString());
+                    Console.WriteLine($"{ex.Message}");
+                }
             }
 
             var filePaths = taskResults?.Select(r => r != null ? Path.Combine(inputSource.Config.DownloadDirectory, r) : null);
@@ -77,7 +90,7 @@
             string fileName)
         {
             Console.WriteLine();
-           
+
             if (hasNoFileExtension)
             {
                 Console.WriteLine($"File name : {fileName.ToUpper()} does not have an extension");
@@ -104,17 +117,17 @@
             {
                 Count += 1;
 
-                showMessageOnConsole(inputSource.Verbose, 
+                showMessageOnConsole(inputSource.Verbose,
                     false,
-                        inputSource.Downloads.Length, 
+                        inputSource.Downloads.Length,
                             item.File);
 
                 var downloadToFilePath = Path.Combine(inputSource.Config.DownloadDirectory, item.File);
                 if (!Path.HasExtension(downloadToFilePath))
                 {
-                    showMessageOnConsole(inputSource.Verbose, 
+                    showMessageOnConsole(inputSource.Verbose,
                                          true,
-                                         inputSource.Downloads.Length, 
+                                         inputSource.Downloads.Length,
                                          item.File);
                     continue;
                 }
