@@ -17,7 +17,7 @@
             ValidateSourceContent(source);
         }
 
-        private static InputSource GetSourceFromFile(string sourceFile)
+        private InputSource GetSourceFromFile(string sourceFile)
         {
             var filePath = Path.GetExtension(sourceFile);
             var fileExtension = Path.GetExtension(filePath).Replace(".", "").ToUpper();
@@ -26,7 +26,7 @@
             return source;
         }
 
-        private static DownloadSourceBase GetDownloadSourceFromFactory(string fileExtension)
+        private DownloadSourceBase GetDownloadSourceFromFactory(string fileExtension)
         {
             DownloadSourceBase downloadSourceBase = DownloadSourceFactory.GetDownloadSource(fileExtension.ToUpper());
             return downloadSourceBase;
