@@ -34,75 +34,96 @@
 
         private void ValidateArguments(string sourcePath)
         {
-            if (sourcePath == null)
-                throw new Exception("Cli arguments can't be null");
+            try
+            {
 
-            if (!File.Exists(sourcePath))
-                throw new Exception("Source file path is invalid");
+                if (sourcePath == null)
+                    throw new Exception("Cli arguments can't be null");
 
-            var sourceType = sourcePath != null ?
-                                  Path.GetExtension(sourcePath).Replace(".", "") :
-                                  null;
-            if (sourceType == null)
-                throw new Exception("Source file type can't be empty or null");
+                if (!File.Exists(sourcePath))
+                    throw new Exception("Source file path is invalid");
 
-            if (!Enum.IsDefined(typeof(DownloadSourceEnum), sourceType?.ToUpper()))
-                throw new Exception($"Invalid source file type : {sourceType}");
+                var sourceType = sourcePath != null ?
+                                      Path.GetExtension(sourcePath).Replace(".", "") :
+                                      null;
+                if (sourceType == null)
+                    throw new Exception("Source file type can't be empty or null");
+
+                if (!Enum.IsDefined(typeof(DownloadSourceEnum), sourceType?.ToUpper()))
+                    throw new Exception($"Invalid source file type : {sourceType}");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         public void ValidateSourceContent(InputSource source)
         {
-            if (source == null)
-                throw new Exception("Source object can't be null");
-
-            if (source.Downloads == null)
-                throw new Exception("Download details in the source can't be null");
-
-            if (source.Downloads.Length > 0)
+            try
             {
-                foreach (var d in source.Downloads)
+
+                if (source == null)
+                    throw new Exception("Source object can't be null");
+
+                if (source.Downloads == null)
+                    throw new Exception("Download details in the source can't be null");
+
+                if (source.Downloads.Length > 0)
                 {
-                    if (d.Url == null)
+                    foreach (var d in source.Downloads)
                     {
-                        throw new Exception("Download url can't be null");
-                    }
-                    if (d.File == null)
-                    {
-                        throw new Exception("Download file name can't be null");
+                        if (d.Url == null)
+                        {
+                            throw new Exception("Download url can't be null");
+                        }
+                        if (d.File == null)
+                        {
+                            throw new Exception("Download file name can't be null");
+                        }
                     }
                 }
+
+                if (source.Config == null)
+                    throw new Exception("Target directory can't be null");
+
+                if (source.Config.DownloadDirectory == null)
+                    throw new Exception("Download directory can't be null");
             }
-
-            if (source.Config == null)
-                throw new Exception("Target directory can't be null");
-
-            if (source.Config.DownloadDirectory == null)
-                throw new Exception("Download directory can't be null");
-
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public void ShowValidationDetails(string sourceFile)
         {
-            var source = GetSourceFromFile(sourceFile);
+            try
+            {
+                var source = GetSourceFromFile(sourceFile);
 
-            if (source.Config != null && source.Config.DownloadDirectory == null)
-            {
-                Console.WriteLine($"Download directory : {source.Config.DownloadDirectory}");
-                Console.WriteLine($"# of ParallelDownloads : {source.Config.ParallelDownloads}");
-            }
-            if (source.Downloads != null && source.Downloads.Length > 0)
-            {
-                foreach (var d in source.Downloads)
+                if (source.Config != null && source.Config.DownloadDirectory == null)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine($"Url : {d.Url}");
-                    Console.WriteLine($"File : {d.File}");
-                    Console.WriteLine($"Overwrite : {d.Overwrite}");
-                    Console.WriteLine($"Sha256 : {d.Sha256}");
-                    Console.WriteLine($"Sha1 : {d.Sha1}");
+                    Console.WriteLine($"Download directory : {source.Config.DownloadDirectory}");
+                    Console.WriteLine($"# of ParallelDownloads : {source.Config.ParallelDownloads}");
+                }
+                if (source.Downloads != null && source.Downloads.Length > 0)
+                {
+                    foreach (var d in source.Downloads)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine($"Url : {d.Url}");
+                        Console.WriteLine($"File : {d.File}");
+                        Console.WriteLine($"Overwrite : {d.Overwrite}");
+                        Console.WriteLine($"Sha256 : {d.Sha256}");
+                        Console.WriteLine($"Sha1 : {d.Sha1}");
+                    }
                 }
             }
-
-
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

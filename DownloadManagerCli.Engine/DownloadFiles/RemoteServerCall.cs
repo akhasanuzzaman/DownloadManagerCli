@@ -15,20 +15,12 @@
         }
         public async Task<string> DownloadAsync(Uri uri, string downloadToFilePath, bool overwrite)
         {
-            Console.WriteLine();
-
             try
             {
                 using var client = new WebClient();
 
-                if (!File.Exists(downloadToFilePath))
-                {
-                    await client
-                                .DownloadFileTaskAsync(uri, downloadToFilePath)
-                                    .ConfigureAwait(false);
-                }
-
-                if (File.Exists(downloadToFilePath) && overwrite)
+                if (!File.Exists(downloadToFilePath)
+                    || (File.Exists(downloadToFilePath) && overwrite))
                 {
                     await client
                                 .DownloadFileTaskAsync(uri, downloadToFilePath)
@@ -39,26 +31,22 @@
 
                 if (!File.Exists(downloadToFilePath))
                 {
+                    _logger.LogInformation($"{uri.AbsoluteUri} : is downloaded");
                     Console.WriteLine($"{Path.GetFileName(uri.AbsoluteUri)} was't downloaded");
+                    return downloadToFilePath;
                 }
-                else
+
+                if (File.Exists(downloadToFilePath))
                 {
-                    if (File.Exists(downloadToFilePath))
-                    {
-                        Console.WriteLine($"{Path.GetFileName(uri.AbsoluteUri)} downloaded");
-                    }
+                    Console.WriteLine($"{Path.GetFileName(uri.AbsoluteUri)} downloaded");
+                    return downloadToFilePath;
                 }
-                Console.WriteLine();
-                _logger.LogInformation($"{uri.AbsoluteUri} : is downloaded");
-
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
                 Console.WriteLine(ex.Message);
             }
-
             return downloadToFilePath;
         }
 
