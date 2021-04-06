@@ -128,6 +128,7 @@
                                              => Dependency
                                                      .ConfigureServices()
                                                              .BuildServiceProvider();
+
         private static async Task ExecuteDownloadCommandAsync(DownloadArguments downloadArguments, InputSource fileSource)
         {
 
@@ -166,6 +167,7 @@
                 Console.WriteLine("Input file is valid");
             }
         }
+
         private static IEnumerable<Type> LoadVerbs()
                 => from assemblyName in Assembly.GetExecutingAssembly().GetReferencedAssemblies()
                    let assembly = Assembly.Load(assemblyName)
